@@ -13,6 +13,14 @@ let HttpExceptionFilter = class HttpExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
         const request = ctx.getRequest();
+        if (!(exception instanceof common_1.HttpException)) {
+            console.error('🔴 NON-HTTP EXCEPTION CAUGHT:');
+            console.error('   Path:', request.url);
+            console.error('   Exception:', exception);
+            if (exception instanceof Error) {
+                console.error('   Stack:', exception.stack);
+            }
+        }
         const status = exception instanceof common_1.HttpException
             ? exception.getStatus()
             : common_1.HttpStatus.INTERNAL_SERVER_ERROR;

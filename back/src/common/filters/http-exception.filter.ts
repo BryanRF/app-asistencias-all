@@ -14,6 +14,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest();
 
+    // Log the actual exception for debugging
+    if (!(exception instanceof HttpException)) {
+      console.error('🔴 NON-HTTP EXCEPTION CAUGHT:');
+      console.error('   Path:', request.url);
+      console.error('   Exception:', exception);
+      if (exception instanceof Error) {
+        console.error('   Stack:', exception.stack);
+      }
+    }
+
     const status =
       exception instanceof HttpException
         ? exception.getStatus()

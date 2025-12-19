@@ -1,6 +1,5 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/platform_helper.dart';
 
 /// Servicio para gestionar la configuración de la aplicación
 /// Maneja el host de las APIs de forma dinámica
@@ -15,21 +14,9 @@ class ConfigService {
 
   String? _cachedHost;
 
-  /// Verifica si la aplicación está ejecutándose en modo debug y en desktop
-  bool _isDebugDesktop() {
-    if (!kDebugMode) return false;
-    
-    try {
-      return Platform.isWindows || Platform.isLinux || Platform.isMacOS;
-    } catch (e) {
-      // Si hay error al detectar la plataforma, retornar false
-      return false;
-    }
-  }
-
   /// Obtiene el host por defecto según el entorno
   String _getDefaultHost() {
-    if (_isDebugDesktop()) {
+    if (PlatformHelper.isDebugDesktop()) {
       return _localhostHost;
     }
     return _defaultHost;
@@ -37,6 +24,12 @@ class ConfigService {
 
   /// Obtiene el host configurado o el host por defecto
   Future<String> getApiHost() async {
+    // Si estamos en modo debug desktop, siempre usar localhost
+    if (PlatformHelper.isDebugDesktop()) {
+      _cachedHost = _localhostHost;
+      return _cachedHost!;
+    }
+
     if (_cachedHost != null) {
       return _cachedHost!;
     }
