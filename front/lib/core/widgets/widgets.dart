@@ -10,3 +10,4 @@ export 'status_badge.dart';
 export 'time_badge.dart';
 export 'message_helper.dart';
 export 'responsive_container.dart';
+export 'app_sidebar.dart';
